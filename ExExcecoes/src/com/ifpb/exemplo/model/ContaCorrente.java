@@ -1,5 +1,6 @@
 package com.ifpb.exemplo.model;
 
+import com.ifpb.exemplo.exceptions.LimiteExcedidoException;
 import com.ifpb.exemplo.exceptions.SaldoInsuficienteException;
 import com.ifpb.exemplo.exceptions.ValorNegativoException;
 
@@ -25,11 +26,17 @@ public class ContaCorrente {
         saldo-=valor;
         return true;
     }
-    public boolean depositar(double valor){
+    public boolean depositar(double valor) throws ValorNegativoException, LimiteExcedidoException {
+        if (valor<=0){
+            throw new ValorNegativoException("O valor não pode ser"+" negativo ou zero.");
+        }
+        if (valor>5000){
+            throw new LimiteExcedidoException("O valor não ser" + " maior que o estabelecido para sua conta");
+        }
         saldo+=valor;
         return true;
     }
-    public boolean transferir(ContaCorrente outra, double valor) throws ValorNegativoException, SaldoInsuficienteException{
+    public boolean transferir(ContaCorrente outra, double valor) throws ValorNegativoException, SaldoInsuficienteException, LimiteExcedidoException{
         if(sacar(valor)){
             outra.depositar(valor);
             return true;
